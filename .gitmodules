@@ -1,0 +1,6 @@
+[submodule "thirdparty/js-beautify"]
+	path = thirdparty/js-beautify
+	url = C:\\development\\js\\Brackets\\37\\www\\extensions\\dev\\brackets-jsbeautifier\\thirdparty\\js-beautify
+[submodule "thirdparty/json5"]
+	path = thirdparty/json5
+	url = C:\\development\\js\\Brackets\\37\\www\\extensions\\dev\\brackets-jsbeautifier\\thirdparty\\json5

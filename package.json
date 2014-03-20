@@ -1,0 +1,19 @@
+{
+    "name": "brackets-jsbeautifier",
+    "title": "jsbeautifier",
+    "version": "0.0.1",
+    "description": "Beautify JavaScript, HTML, CSS, and more",
+    "homepage": "https://github.com/taichi/brackets-jsbeautifier",
+    "author": "SATO taichi <ryushi@gmail.com>",
+    "license": "MIT",
+    "categories": "formatting",
+    "keywords": [
+        "format",
+        "beautify",
+        "jsbeautify",
+        "editorconfig"
+    ],
+    "engines": {
+        "brackets": ">=0.36.0"
+    }
+}

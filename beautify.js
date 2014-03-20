@@ -13,7 +13,13 @@ define(function(require, exports, module) {
     var conf = require("configurator");
 
     var eol = function(options) {
-        return options.end_of_line ? options.end_of_line : "\n";
+        if (options.end_of_line) {
+            return options.end_of_line;
+        }
+        if (brackets.platform === "win") {
+            return "\r\n";
+        }
+        return "\n";
     };
 
     var text = function(txt, options) {

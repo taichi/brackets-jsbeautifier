@@ -5,6 +5,7 @@
     var DOMAIN_NAME = "editorconfig";
 
     var _ = require("lodash");
+    var path = require("path");
     var editorconfig = require("editorconfig");
 
     var _cmdParse = function(filepath, config, cb) {
@@ -13,7 +14,12 @@
             options.config = config;
         }
         _.delay(function() {
-            cb(null, editorconfig.parse(filepath, options));
+            filepath = path.normalize(filepath);
+            if (path.resolve(filepath) === filepath) {
+                cb(null, editorconfig.parse(filepath, options));
+            } else {
+                cb("filepath must be absolute.");
+            }
         });
     };
 

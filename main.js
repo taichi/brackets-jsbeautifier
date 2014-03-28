@@ -3,9 +3,10 @@
 define(function(require, exports, module) {
     "use strict";
 
+
     var CMD_PREFIX = "taichi.jsbeautifier.";
-    var CMD_FORMAT = CMD_PREFIX + "beautify";
-    var CMD_FORMAT_ON_SAVE = CMD_PREFIX + "on_save";
+    var CMD_FORMAT = exports.CMD_FORMAT = CMD_PREFIX + "beautify";
+    var CMD_FORMAT_ON_SAVE = exports.CMD_FORMAT_ON_SAVE = CMD_PREFIX + "on_save";
 
     var _ = brackets.getModule("thirdparty/lodash"),
         AppInit = brackets.getModule("utils/AppInit"),
@@ -16,11 +17,11 @@ define(function(require, exports, module) {
 
     var strings = require("i18n!nls/strings");
 
-    var beautify = require("beautify"),
+    var beautify = require("beautify").beautify,
         prefs = require("preferences"),
-        guard = require("guard");
+        guard = require("guard")();
 
-    var EVENT_SAVED = "documentSaved.beautify";
+    var EVENT_SAVED = exports.EVENT_SAVED = "documentSaved.beautify";
     var activate = function() {
         $(DocumentManager).on(EVENT_SAVED, onSave);
     };
@@ -48,7 +49,9 @@ define(function(require, exports, module) {
             deactivate();
         }
         var formatOnSave = CommandManager.get(CMD_FORMAT_ON_SAVE);
-        formatOnSave.setChecked(enabled);
+        if (formatOnSave) {
+            formatOnSave.setChecked(enabled);
+        }
     };
     AppInit.appReady(onChange);
 

@@ -10,7 +10,7 @@ define(function(require, exports, module) {
         prefs.on("change", fn);
     };
 
-    var PREF_KEY_ENABLED = "on_save";
+    var PREF_KEY_ENABLED = exports.PREF_KEY_ENABLED = "on_save";
     prefs.definePreference(PREF_KEY_ENABLED, "boolean", false);
     exports.getEnabled = function() {
         return prefs.get(PREF_KEY_ENABLED);

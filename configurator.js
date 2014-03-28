@@ -68,9 +68,9 @@ define(function(require, exports, module) {
     };
 
     var endsWith = function(str, ends) {
-        if (ends === '') return true;
+        if (ends === "") return true;
         if (!str || !ends) return false;
-        return str.length >= ends.length && str.slice(str.length - ends.length) === ends;
+        return ends.length <= str.length && str.slice(str.length - ends.length) === ends;
     };
 
     AppInit.appReady(function() {
@@ -104,11 +104,9 @@ define(function(require, exports, module) {
             var eol = edconf.end_of_line;
             if (eol === 'cr') {
                 result.end_of_line = '\r';
-            }
-            if (eol === 'lf') {
+            } else if (eol === 'lf') {
                 result.end_of_line = '\n';
-            }
-            if (eol === 'crlf') {
+            } else if (eol === 'crlf') {
                 result.end_of_line = '\r\n';
             }
             delete edconf.end_of_line;
@@ -116,8 +114,12 @@ define(function(require, exports, module) {
         return _.merge(result, edconf);
     };
 
+    // exports for testing.
+    exports._endsWith = endsWith;
+    exports._translate = translate;
+
     /**
-     * @param {string} filepath
+     * @param {string} absolute filepath
      * @return {jQuery.Promise}
      */
     exports.configure = function(filepath) {

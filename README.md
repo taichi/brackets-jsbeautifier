@@ -28,7 +28,6 @@ TODO
 * application support directory
 
 ## TODO
-* unit test
 * build script
 * CI
 * well documents

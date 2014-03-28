@@ -1,0 +1,12 @@
+{
+  "name": "brackets-jsbeautifier",
+  "version": "0.0.1",
+  "description": "",
+  "dependencies": {
+    "editorconfig": "~0.11.4",
+    "lodash": "~2.4.1"
+  },
+  "devDependencies": {},
+  "author": "SATO taichi <ryushi@gmail.com>",
+  "license": "MIT"
+}

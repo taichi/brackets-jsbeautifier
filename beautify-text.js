@@ -21,8 +21,10 @@ define(function(require, exports, module) {
             result = result.replace(/\r\n|\r|\n/g, options.end_of_line);
         }
         if (options.insert_final_newline) {
-            if (/\r\n|\r|\n/m.test(txt.substring(txt.length - 2)) === false) {
-                result += eol(options);
+            var ln = eol(options);
+            var lnln = ln + ln;
+            if (txt.substring(txt.length - lnln.length) !== lnln) {
+                result += ln;
             }
         }
         return result;

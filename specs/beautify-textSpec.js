@@ -17,15 +17,17 @@ define(function(require, exports, module) {
             expect(typeof text).toBe("function");
         });
 
-        var makeOptions = _.partial(_.merge, {
+        var base = {
+            insert_final_newline: false,
+            trim_trailing_whitespace: false,
             end_of_line: "\n"
-        });
+        };
 
         describe("trim_trailing_whitespace", function() {
             it("should remove trailing spaces", function() {
-                var opt = makeOptions({
+                var opt = _.defaults({
                     trim_trailing_whitespace: true
-                });
+                }, base);
                 var txt = "aaa \nbbb\t\n";
                 expect(text(txt, opt)).toBe("aaa\nbbb\n");
             });
@@ -33,21 +35,29 @@ define(function(require, exports, module) {
 
         describe("end_of_line", function() {
             it("should replace end of line", function() {
-                var opt = makeOptions({
+                var opt = _.defaults({
                     trim_trailing_whitespace: false
-                });
+                }, base);
                 var txt = "aaa \rbbb\t\r\n";
                 expect(text(txt, opt)).toBe("aaa \nbbb\t\n");
             });
         });
 
         describe("insert_final_newline", function() {
-            it("should append newline", function() {
-                var opt = makeOptions({
-                    insert_final_newline: true
-                });
-                var txt = "aaa \nbbb\t";
+            var opt = _.defaults({
+                insert_final_newline: true
+            }, base);
+
+            it("should append newline 1 times", function() {
+                var txt = "aaa \nbbb\t\n";
+                expect(text(txt, opt)).toBe("aaa \nbbb\t\n\n");
+                txt = "aaa \nbbb\t";
                 expect(text(txt, opt)).toBe("aaa \nbbb\t\n");
+            });
+
+            it("should not append newline", function() {
+                var txt = "aaa \nbbb\t\n\n";
+                expect(text(txt, opt)).toBe("aaa \nbbb\t\n\n");
             });
         });
     });

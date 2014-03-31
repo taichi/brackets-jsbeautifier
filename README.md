@@ -28,7 +28,6 @@ TODO
 * application support directory
 
 ## TODO
-* build script
 * CI
 * well documents
 * automate release operation
@@ -40,3 +39,4 @@ TODO
 
 ## Alternative
 * [drewhjava/brackets-beautify](https://github.com/drewhjava/brackets-beautify)
+

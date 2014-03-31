@@ -5,7 +5,7 @@
     "description": "Beautify JavaScript, HTML, CSS, and more",
     "homepage": "https://github.com/taichi/brackets-jsbeautifier",
     "author": "SATO taichi <ryushi@gmail.com>",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "categories": "formatting",
     "keywords": [
         "formatting",

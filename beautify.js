@@ -22,7 +22,7 @@ define(function(require, exports, module) {
 
     var js = require("thirdparty/js-beautify/js/lib/beautify"),
         css = require("thirdparty/js-beautify/js/lib/beautify-css"),
-        html = require("thirdparty/js-beautify/js/lib/beautify-html"),
+        html = require("thirdparty/js-beautify/js/lib/beautify-html").html_beautify,
         text = require("beautify-text");
 
     var conf = require("configurator");

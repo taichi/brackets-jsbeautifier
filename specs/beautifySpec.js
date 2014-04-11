@@ -18,23 +18,24 @@
 define(function(require, exports, module) {
     "use strict";
     var _ = brackets.getModule("thirdparty/lodash"),
+        Async = brackets.getModule("utils/Async"),
         SpecRunnerUtils = brackets.getModule("spec/SpecRunnerUtils"),
         FileUtils = brackets.getModule("file/FileUtils");
-
-    var expectText = require("text!specs/fixtures/beautify/expect.js");
 
     describe("Jsbeautifier_beautify", function() {
         var extensionPath = FileUtils.getNativeModuleDirectoryPath(module),
             fixtures = extensionPath + "/fixtures/beautify";
-        var target, PM, DM;
+        var target, testWindow, PM, DM, CM;
 
         beforeFirst(function() {
             SpecRunnerUtils.createTestWindowAndRun(this, function(w) {
+                testWindow = w;
                 // see. src/brackets.js#_initTest
                 // https://github.com/adobe/brackets/blob/master/src/brackets.js#L147
                 var t = w.brackets.test;
                 PM = t.ProjectManager;
                 DM = t.DocumentManager;
+                CM = t.CommandManager;
                 var req = t.ExtensionLoader.getRequireContextForExtension("brackets-jsbeautifier");
                 target = req("beautify");
             });
@@ -45,27 +46,59 @@ define(function(require, exports, module) {
         });
 
         describe("beautify", function() {
-            var actual = fixtures + "/actual.js";
-            beforeEach(function() {
-                SpecRunnerUtils.loadProjectInTestWindow(fixtures);
-                SpecRunnerUtils.copy(fixtures + "/original.js", actual);
-            });
-
-            afterEach(function() {
-                SpecRunnerUtils.remove(actual);
-            });
-
-            it("should work normally", function() {
-                runs(function() {
-                    var promise = SpecRunnerUtils.openProjectFiles(["actual.js"]).done(function(docs) {
-                        var p = target.beautify(docs["actual.js"]).done(function(doc) {
-                            expect(doc.getText()).toBe(expectText);
-                        });
-                        waitsForDone(p, "beautify test file", 10000);
-                    });
-                    waitsForDone(promise, "open test file");
+            var sharedFn = function(extension, msg) {
+                var actual = fixtures + "/actual." + extension;
+                beforeEach(function() {
+                    SpecRunnerUtils.loadProjectInTestWindow(fixtures);
+                    SpecRunnerUtils.copy(fixtures + "/original." + extension, actual);
                 });
-            });
+
+                afterEach(function() {
+                    runs(function() {
+                        testWindow.closeAllFiles();
+                        SpecRunnerUtils.remove(actual);
+                    });
+                });
+
+                it(msg, function() {
+                    runs(function() {
+                        var promise = Async.chain([
+                            SpecRunnerUtils.makeAbsolute,
+                            SpecRunnerUtils.resolveNativeFileSystemPath,
+                            FileUtils.readAsText,
+                            function(expectText) {
+                                var d = $.Deferred();
+                                var p = SpecRunnerUtils.openProjectFiles(["actual." + extension]);
+                                p.done(function(docs) {
+                                    d.resolve({
+                                        expectText: expectText,
+                                        docs: docs
+                                    });
+                                }).fail(function(err) {
+                                    d.reject(err);
+                                });
+                                return d.promise();
+                            },
+                            function(prev) {
+                                var d = $.Deferred();
+                                var p = target.beautify(prev.docs["actual." + extension]);
+                                p.done(function(doc) {
+                                    expect(doc.getText()).toBe(prev.expectText);
+                                    d.resolve();
+                                }).fail(function(err) {
+                                    d.reject(err);
+                                });
+                                return d.promise();
+                            }
+                        ], ["expect." + extension]);
+
+                        waitsForDone(promise, "wait for spec for " + extension, 10000);
+                    });
+
+                });
+            };
+            describe("js", _.partial(sharedFn, "js", "should format javascript normally"));
+            describe("html", _.partial(sharedFn, "html", "should format html normally"));
         });
 
         describe("select", function() {
